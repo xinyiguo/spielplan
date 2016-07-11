@@ -3,10 +3,8 @@ package de.mytest.spielplan;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -28,16 +26,17 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
+@RequestMapping("/")
 public class FileUploadController {
 
 	private static final Logger log = LoggerFactory.getLogger(FileUploadController.class);
 
-	@RequestMapping(method = RequestMethod.GET, value = "/")
+	@RequestMapping(method = RequestMethod.GET)
 	public String provideUploadInfo(Model model) throws IOException {
 		return "uploadForm";
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/")
+	@RequestMapping(method = RequestMethod.POST)
 	public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 		if (!file.isEmpty()) {
 			BufferedReader input = null;
