@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -61,11 +62,11 @@ public class FileUploadController {
 				redirectAttributes.addFlashAttribute("result", result);
 
 				redirectAttributes.addFlashAttribute("message",
-						"You successfully uploaded " + file.getOriginalFilename() + "!");
+						file.getOriginalFilename() + " erfolgreich hochgeladen!");
 			} catch (Exception e) {
 				log.debug(e.getMessage());
 				redirectAttributes.addFlashAttribute("message",
-						"Failued to upload " + file.getOriginalFilename() + " => " + e.getMessage());
+						"Fehler beim Hochladen " + file.getOriginalFilename() + " => " + e.getMessage());
 			} finally {
 				try {
 					if (input != null) {
@@ -77,7 +78,7 @@ public class FileUploadController {
 			}
 		} else {
 			redirectAttributes.addFlashAttribute("message",
-					"Failed to upload " + file.getOriginalFilename() + " because it was empty");
+					"Fehler beim Hochladen " + file.getOriginalFilename() + " weil es leer war");
 		}
 
 		return "redirect:/";
