@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 public class SpielPlan {
 
@@ -71,7 +72,7 @@ public class SpielPlan {
 	}
 
 	private static String printDate(final Date date) {
-		final SimpleDateFormat dateFormat = new SimpleDateFormat("E dd.MM.yyyy");
+		final SimpleDateFormat dateFormat = new SimpleDateFormat("E dd.MM.yyyy", LocaleContextHolder.getLocale());
 		return dateFormat.format(date);
 	}
 
