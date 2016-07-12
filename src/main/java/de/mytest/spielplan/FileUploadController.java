@@ -32,6 +32,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/")
 public class FileUploadController {
 
+  private static final String ATTR_DOWNLOAD = "download";
+
+  private static final String ATTR_MESSAGE = "message";
+
   private static final String ATTR_RESULT = "result";
 
   private static final Logger log = LoggerFactory.getLogger(FileUploadController.class);
@@ -50,10 +54,10 @@ public class FileUploadController {
       response.setHeader("Content-Type", "application/octet-stream; charset=UTF-8");
       response.setHeader("Content-Disposition", "attachment;filename=SpielPlan.txt");
       response.setCharacterEncoding("UTF-8");
-      @SuppressWarnings("unchecked")
-      final List<String> lines = (ArrayList<String>) object;
       final OutputStream outStream = response.getOutputStream();
       try {
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+        final List<String> lines = (ArrayList) object;
         IOUtils.writeLines(lines, "\n", outStream, "UTF-8");
       } catch (final Exception e) {
         log.debug(e.getMessage());
@@ -90,12 +94,14 @@ public class FileUploadController {
         final List<String> result = spielPlan.plan();
         request.getSession().setAttribute(ATTR_RESULT, result);
         redirectAttributes.addFlashAttribute(ATTR_RESULT, result);
-
-        redirectAttributes.addFlashAttribute("message",
+        redirectAttributes.addFlashAttribute(ATTR_DOWNLOAD, "Herunterladen als TXT-Datei");
+        redirectAttributes.addFlashAttribute(ATTR_MESSAGE,
             file.getOriginalFilename() + " erfolgreich planen!");
       } catch (final Exception e) {
         log.debug(e.getMessage());
-        redirectAttributes.addFlashAttribute("message",
+        request.getSession().setAttribute(ATTR_RESULT, "");
+        redirectAttributes.addFlashAttribute(ATTR_DOWNLOAD, "");
+        redirectAttributes.addFlashAttribute(ATTR_MESSAGE,
             "Fehler beim Planen " + file.getOriginalFilename() + " => " + e.getMessage());
       } finally {
         try {
@@ -107,7 +113,9 @@ public class FileUploadController {
         }
       }
     } else {
-      redirectAttributes.addFlashAttribute("message", "Fehler beim Planen "
+      request.getSession().setAttribute(ATTR_RESULT, "");
+      redirectAttributes.addFlashAttribute(ATTR_DOWNLOAD, "");
+      redirectAttributes.addFlashAttribute(ATTR_MESSAGE, "Fehler beim Planen "
           + file.getOriginalFilename() + " weil Die Datei leer war");
     }
 
