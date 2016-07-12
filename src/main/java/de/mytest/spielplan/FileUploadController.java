@@ -7,7 +7,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -62,11 +61,11 @@ public class FileUploadController {
 				redirectAttributes.addFlashAttribute("result", result);
 
 				redirectAttributes.addFlashAttribute("message",
-						file.getOriginalFilename() + " erfolgreich hochgeladen!");
+						file.getOriginalFilename() + " erfolgreich planen!");
 			} catch (Exception e) {
 				log.debug(e.getMessage());
 				redirectAttributes.addFlashAttribute("message",
-						"Fehler beim Hochladen " + file.getOriginalFilename() + " => " + e.getMessage());
+						"Fehler beim Planen " + file.getOriginalFilename() + " => " + e.getMessage());
 			} finally {
 				try {
 					if (input != null) {
@@ -78,7 +77,7 @@ public class FileUploadController {
 			}
 		} else {
 			redirectAttributes.addFlashAttribute("message",
-					"Fehler beim Hochladen " + file.getOriginalFilename() + " weil es leer war");
+					"Fehler beim Planen " + file.getOriginalFilename() + " weil Die Datei leer war");
 		}
 
 		return "redirect:/";
