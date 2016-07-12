@@ -2,33 +2,47 @@
 <head>
 <title>Spielplan</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+
+<!-- Optional theme -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" />
 </head>
 <body>
+	<div class="container">
+		<div class="page-header">
+			<h2 th:text="${message}?${message}:Willkommen" />
+		</div>
 
-	<div th:if="${message}">
-		<h2 th:text="${message}" />
+		<div class="row">
+			<div class="col-md-12 col-lg-6">
+				<form method="POST" enctype="multipart/form-data" action="/">
+					<div class="form-group">
+						<label>Datei auswälen:</label> <input type="file" name="file" />
+					</div>
+
+					<input class="btn btn-default" type="submit" value="Planen" />
+					<a href="/SpielPlan.txt">Herunterladen als TXT-Datei</a>
+				</form>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-12">
+				<table class="table table-striped">
+					<tbody>
+						<tr th:each="s : ${result}">
+							<td th:text="|${s}|" />
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
 	</div>
-
-	<div>
-		<form method="POST" enctype="multipart/form-data" action="/">
-			<table>
-				<tr>
-					<td>Datei auswälen:</td>
-					<td><input type="file" name="file" /></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td><input type="submit" value="Planen" /></td>
-				</tr>
-			</table>
-		</form>
-	</div>
-
 	
-	<!-- Some code using ${strList} -->
-	<div>
-		<div th:each="s : ${result}" th:text="|${s}|"></div>
-	</div>
-
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </body>
 </html>
