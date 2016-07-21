@@ -2,13 +2,30 @@
 <head>
 <title>Spielplan</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<!-- Latest compiled and minified CSS -->
+
+<script type="text/javascript" th:inline="javascript">	
+window.onload = function() {
+	var obj = [[${result}]];
+	if(obj != null){
+		document.getElementById('link').onclick = function() {
+		
+			var arr = [];
+			for (x in obj) {
+				arr[x]=obj[x].chars;
+			}
+		
+			this.href = 'data:text/plain;charset=utf-8,'
+				+ encodeURIComponent(arr.join("\r\n"));
+		};
+	}
+};
+</script>
+
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-
-<!-- Optional theme -->
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" />
+	
 </head>
 <body>
 	<div class="container">
@@ -24,7 +41,7 @@
 					</div>
 
 					<input class="btn btn-default" type="submit" value="Planen" />
-					<a th:text="${download}" href="/SpielPlan.txt" />
+					<a th:text="${download}" href="" id="link" download="SpielPlan.txt" />
 				</form>
 			</div>
 		</div>
@@ -34,15 +51,16 @@
 				<table class="table table-striped">
 					<tbody>
 						<tr th:each="s : ${result}">
-							<td th:text="|${s}|" />
+							<td th:text="${s.chars}" />
 						</tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
 	</div>
-	
+
 	<script
-		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
+	</script>
 </body>
 </html>

@@ -3,21 +3,15 @@ package de.mytest.spielplan;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -45,31 +39,8 @@ public class FileUploadController {
     return "uploadForm";
   }
 
-  @RequestMapping(value = "/SpielPlan.txt", method = RequestMethod.GET)
-  public void doDownload(final HttpServletRequest request,
-      final HttpServletResponse response) throws IOException {
-    final Object object = request.getSession().getAttribute(ATTR_RESULT);
-    if (object != null) {
-      response.setContentType("text/plain");
-      response.setHeader("Content-Type", "application/octet-stream; charset=UTF-8");
-      response.setHeader("Content-Disposition", "attachment;filename=SpielPlan.txt");
-      response.setCharacterEncoding("UTF-8");
-      final OutputStream outStream = response.getOutputStream();
-      try {
-        @SuppressWarnings({ "rawtypes", "unchecked" })
-        final List<String> lines = (ArrayList) object;
-        IOUtils.writeLines(lines, "\n", outStream, "UTF-8");
-      } catch (final Exception e) {
-        log.debug(e.getMessage());
-      } finally {
-        outStream.close();
-      }
-    }
-  }
-
   @RequestMapping(method = RequestMethod.POST)
-  public String handleFileUpload(final HttpServletRequest request,
-      @RequestParam("file") final MultipartFile file,
+  public String handleFileUpload(@RequestParam("file") final MultipartFile file,
       final RedirectAttributes redirectAttributes) {
     if (!file.isEmpty()) {
       BufferedReader input = null;
@@ -91,15 +62,14 @@ public class FileUploadController {
         }
 
         final SpielPlan spielPlan = new SpielPlan(startDate, teams);
-        final List<String> result = spielPlan.plan();
-        request.getSession().setAttribute(ATTR_RESULT, result);
+        final JsonArray result = spielPlan.plan();
         redirectAttributes.addFlashAttribute(ATTR_RESULT, result);
-        redirectAttributes.addFlashAttribute(ATTR_DOWNLOAD, "Herunterladen als TXT-Datei");
+        redirectAttributes.addFlashAttribute(ATTR_DOWNLOAD,
+            "Herunterladen als TXT-Datei");
         redirectAttributes.addFlashAttribute(ATTR_MESSAGE,
             file.getOriginalFilename() + " erfolgreich planen!");
       } catch (final Exception e) {
         log.debug(e.getMessage());
-        request.getSession().setAttribute(ATTR_RESULT, "");
         redirectAttributes.addFlashAttribute(ATTR_DOWNLOAD, "");
         redirectAttributes.addFlashAttribute(ATTR_MESSAGE,
             "Fehler beim Planen " + file.getOriginalFilename() + " => " + e.getMessage());
@@ -113,7 +83,6 @@ public class FileUploadController {
         }
       }
     } else {
-      request.getSession().setAttribute(ATTR_RESULT, "");
       redirectAttributes.addFlashAttribute(ATTR_DOWNLOAD, "");
       redirectAttributes.addFlashAttribute(ATTR_MESSAGE, "Fehler beim Planen "
           + file.getOriginalFilename() + " weil Die Datei leer war");
